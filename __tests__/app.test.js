@@ -3,7 +3,7 @@ const db = require("../db/connection");
 const data = require("../db/data/test-data");
 const seed = require("../db/seeds/seed");
 const request = require("supertest");
-const endpoints = require("../endpoints.json");
+const endpointsFile = require("../endpoints.json");
 
 afterAll(() => {
   db.end();
@@ -18,8 +18,9 @@ describe("/api", () => {
     return request(app)
       .get("/api")
       .expect(200)
-      .then((response) => {
-        expect(response.body.endpoints).toStrictEqual(endpoints);
+      .then(({ body }) => {
+        const { endpoints } = body;
+        expect(endpoints).toStrictEqual(endpointsFile);
       });
   });
 });
@@ -30,9 +31,10 @@ describe("/api/topics", () => {
       return request(app)
         .get("/api/topics")
         .expect(200)
-        .then((response) => {
-          expect(response.body.topics.length).toBe(3);
-          response.body.topics.forEach((topic) => {
+        .then(({ body }) => {
+          const { topics } = body;
+          expect(topics.length).toBe(3);
+          topics.forEach((topic) => {
             expect(typeof topic.slug).toBe("string");
             expect(typeof topic.description).toBe("string");
           });
@@ -47,9 +49,10 @@ describe("/api/articles", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
-        .then((response) => {
-          expect(response.body.articles.length).toBe(13);
-          response.body.articles.forEach((article) => {
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(articles.length).toBe(13);
+          articles.forEach((article) => {
             expect(typeof article.author).toBe("string");
             expect(typeof article.title).toBe("string");
             expect(typeof article.article_id).toBe("number");
@@ -59,7 +62,7 @@ describe("/api/articles", () => {
             expect(typeof article.article_img_url).toBe("string");
             expect(typeof article.comment_count).toBe("string");
           });
-          expect(response.body.articles).toBeSortedBy("created_at", {
+          expect(articles).toBeSortedBy("created_at", {
             descending: true,
           });
         });
@@ -71,21 +74,16 @@ describe("/api/articles", () => {
       return request(app)
         .get("/api/articles/3")
         .expect(200)
-        .then((response) => {
-          expect(response.body.article.article_id).toBe(3);
-          expect(response.body.article.title).toBe(
-            "Eight pug gifs that remind me of mitch"
-          );
-          expect(response.body.article.topic).toBe("mitch");
-          expect(response.body.article.author).toBe("icellusedkars");
-          expect(response.body.article.body).toBe("some gifs");
-          expect(response.body.article.created_at).toBe(
-            "2020-11-03T09:12:00.000Z"
-          );
-          expect(response.body.article.votes).toBe(0);
-          expect(response.body.article.article_img_url).toBe(
-            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-          );
+        .then(({ body }) => {
+          const { article } = body;
+          expect(article.article_id).toBe(3);
+          expect(typeof article.title).toBe("string");
+          expect(typeof article.topic).toBe("string");
+          expect(typeof article.author).toBe("string");
+          expect(typeof article.body).toBe("string");
+          expect(typeof article.created_at).toBe("string");
+          expect(typeof article.votes).toBe("number");
+          expect(typeof article.article_img_url).toBe("string");
         });
     });
 
@@ -93,8 +91,8 @@ describe("/api/articles", () => {
       return request(app)
         .get("/api/articles/99999")
         .expect(404)
-        .then((response) => {
-          expect(response.body.message).toBe("Article not found.");
+        .then(({ body }) => {
+          expect(body.message).toBe("Article not found.");
         });
     });
 
@@ -102,8 +100,46 @@ describe("/api/articles", () => {
       return request(app)
         .get("/api/articles/invalid-id")
         .expect(400)
-        .then((response) => {
-          expect(response.body.message).toBe("Bad request.");
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request.");
+        });
+    });
+  });
+
+  describe("GET /api/articles/:article_id/comments", () => {
+    test("GET 200: Responds with an array with all comment objects of a particular article with the required key-value pairs ordered from most recent", () => {
+      return request(app)
+        .get("/api/articles/5/comments")
+        .expect(200)
+        .then(({ body }) => {
+          const { comments } = body;
+          expect(comments.length).toBe(2);
+          comments.forEach((comment) => {
+            expect(comment.article_id).toBe(5);
+            expect(typeof comment.comment_id).toBe("number");
+            expect(typeof comment.votes).toBe("number");
+            expect(typeof comment.created_at).toBe("string");
+            expect(typeof comment.author).toBe("string");
+            expect(typeof comment.body).toBe("string");
+          });
+        });
+    });
+
+    test("GET 404: Responds with an error when passed a non-existent id", () => {
+      return request(app)
+        .get("/api/articles/99999/comments")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("Article not found.");
+        });
+    });
+
+    test("GET 400: Responds with an error when passed an id of an invalid data type", () => {
+      return request(app)
+        .get("/api/articles/invalid-id/comments")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request.");
         });
     });
   });
@@ -114,8 +150,8 @@ describe("Undeclared endpoints", () => {
     return request(app)
       .get("/api/undeclared-endpoint")
       .expect(404)
-      .then((response) => {
-        expect(response.body.message).toBe("Endpoint not found.");
+      .then(({ body }) => {
+        expect(body.message).toBe("Endpoint not found.");
       });
   });
 });

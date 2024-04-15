@@ -2,6 +2,7 @@ const {
   fetchAllTopics,
   fetchArticleById,
   fetchAllArticles,
+  fetchCommentsByArticleId,
 } = require("../models/nc_news.models");
 
 function getAllTopics(req, res, next) {
@@ -31,4 +32,20 @@ function getArticleById(req, res, next) {
     });
 }
 
-module.exports = { getAllTopics, getArticleById, getAllArticles };
+function getCommentsByArticleId(req, res, next) {
+  const { article_id } = req.params;
+  fetchCommentsByArticleId(article_id)
+    .then((comments) => {
+      res.status(200).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = {
+  getAllTopics,
+  getArticleById,
+  getAllArticles,
+  getCommentsByArticleId,
+};

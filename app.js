@@ -3,7 +3,14 @@ const {
   getAllTopics,
   getArticleById,
   getAllArticles,
+  getCommentsByArticleId,
 } = require("./controllers/nc_news.controllers");
+const {
+  sendUndeclaredEndpointError,
+  sendCustomError,
+  sendServerError,
+  sendSqlError,
+} = require("./error_handlers/nc_news.error_handlers");
 const endpoints = require("./endpoints.json");
 
 const app = express();
@@ -18,26 +25,14 @@ app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
 
-app.all("*", (req, res) => {
-  res.status(404).send({ message: "Endpoint not found." });
-});
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
-app.use((err, req, res, next) => {
-  if (err.status && err.message) {
-    res.status(err.status).send({ message: err.message });
-  }
-  next(err);
-});
+app.all("*", sendUndeclaredEndpointError);
 
-app.use((err, req, res, next) => {
-  if (err.code === "22P02") {
-    res.status(400).send({ message: "Bad request." });
-  }
-});
+app.use(sendCustomError);
 
-app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(500).send({ message: "Internal Server Error" });
-});
+app.use(sendSqlError);
+
+app.use(sendServerError);
 
 module.exports = app;
