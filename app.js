@@ -1,7 +1,12 @@
 const express = require("express");
 const { getAllTopics } = require("./controllers/nc_news.controllers");
+const endpoints = require("./endpoints.json");
 
 const app = express();
+
+app.get("/api", (req, res, next) => {
+  res.status(200).send({ endpoints });
+});
 
 app.get("/api/topics", getAllTopics);
 
