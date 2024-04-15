@@ -42,5 +42,19 @@
         "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
       }
     }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "responds with an array with all comment objects of a particular article with the required key-value pairs ordered from most recent",
+    "params": ["article_id"],
+    "exampleResponse": {
+      "article": {
+        "article_id": 3,
+        "comment_id": 4,
+        "votes": 51,
+        "author": "butter_bridge",
+        "body": "Fruit pastilles",
+        "created_at": "2020-11-03 09:12:00"
+      }
+    }
   }
 }
