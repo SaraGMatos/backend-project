@@ -22,3 +22,7 @@ To do so please:
 ## /api/topics
 
 - _GET_: Responds with an array of objects with all topics and the required keys (slug, description).
+
+## /api/treasures/:treasure_id
+
+- _GET_: Responds with an article object with the required keys (author, title, article_id, body, topic, created_at, votes, article_imd_url)
