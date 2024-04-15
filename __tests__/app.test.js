@@ -107,7 +107,41 @@ describe("/api/articles", () => {
   });
 
   describe("GET /api/articles/:article_id/comments", () => {
-    test("Responds with an array with all comment objects of a particular article", () => {});
+    test("GET 200: Responds with an array with all comment objects of a particular article with the required key-value pairs ordered from most recent", () => {
+      return request(app)
+        .get("/api/articles/5/comments")
+        .expect(200)
+        .then(({ body }) => {
+          const { comments } = body;
+          expect(comments.length).toBe(2);
+          comments.forEach((comment) => {
+            expect(comment.article_id).toBe(5);
+            expect(typeof comment.comment_id).toBe("number");
+            expect(typeof comment.votes).toBe("number");
+            expect(typeof comment.created_at).toBe("string");
+            expect(typeof comment.author).toBe("string");
+            expect(typeof comment.body).toBe("string");
+          });
+        });
+    });
+
+    test("GET 404: Responds with an error when passed a non-existent id", () => {
+      return request(app)
+        .get("/api/articles/99999/comments")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("Article not found.");
+        });
+    });
+
+    test("GET 400: Responds with an error when passed an id of an invalid data type", () => {
+      return request(app)
+        .get("/api/articles/invalid-id/comments")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request.");
+        });
+    });
   });
 });
 
