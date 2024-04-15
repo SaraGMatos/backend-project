@@ -1,6 +1,7 @@
 const {
   fetchAllTopics,
   fetchArticleById,
+  fetchAllArticles,
 } = require("../models/nc_news.models");
 
 function getAllTopics(req, res, next) {
@@ -13,11 +14,16 @@ function getAllTopics(req, res, next) {
     });
 }
 
+function getAllArticles(req, res, next) {
+  fetchAllArticles().then((articles) => {
+    res.status(200).send({ articles });
+  });
+}
+
 function getArticleById(req, res, next) {
   const { article_id } = req.params;
   fetchArticleById(article_id)
     .then((article) => {
-      console.log(article);
       res.status(200).send({ article });
     })
     .catch((error) => {
@@ -25,4 +31,4 @@ function getArticleById(req, res, next) {
     });
 }
 
-module.exports = { getAllTopics, getArticleById };
+module.exports = { getAllTopics, getArticleById, getAllArticles };
