@@ -23,6 +23,10 @@ To do so please:
 
 - _GET_: Responds with an array of objects with all topics and the required keys (slug, description).
 
+## /api/articles
+
+- _GET_: Responds with an array of objects with all articles in descending order by creation date and with the required keys (author, title, article_id, topic, created_at, votes, article_img_url, comment_count).
+
 ## /api/treasures/:treasure_id
 
-- _GET_: Responds with an article object with the required keys (author, title, article_id, body, topic, created_at, votes, article_imd_url)
+- _GET_: Responds with an article object with the required keys (author, title, article_id, body, topic, created_at, votes, article_imd_url).
