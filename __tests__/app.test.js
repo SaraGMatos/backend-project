@@ -3,6 +3,7 @@ const db = require("../db/connection");
 const data = require("../db/data/test-data");
 const seed = require("../db/seeds/seed");
 const request = require("supertest");
+const endpoints = require("../endpoints.json");
 
 afterAll(() => {
   db.end();
@@ -10,6 +11,17 @@ afterAll(() => {
 
 beforeEach(() => {
   return seed(data);
+});
+
+describe("/api", () => {
+  test("GET 200: Responds with the endpoints.json", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.endpoints).toStrictEqual(endpoints);
+      });
+  });
 });
 
 describe("/api/topics", () => {
