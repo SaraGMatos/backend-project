@@ -19,6 +19,10 @@ To do so please:
 
 - _GET_: Responds with a list of all the endpoints that can be interacted with.
 
+## /api/users
+
+- _GET_: Responds with an array of objects with all users and the required keys (username, name, avatar_url).
+
 ## /api/topics
 
 - _GET_: Responds with an array of objects with all topics and the required keys (slug, description).
