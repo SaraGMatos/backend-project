@@ -6,6 +6,7 @@ const {
   checkIfArticleExists,
   addCommentByArticleId,
   updateArticleById,
+  removeCommentById,
 } = require("../models/nc_news.models");
 
 function getAllTopics(req, res, next) {
@@ -84,6 +85,18 @@ function patchArticleById(req, res, next) {
     });
 }
 
+function deleteCommentById(req, res, next) {
+  const { comment_id } = req.params;
+
+  removeCommentById(comment_id)
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch((error) => {
+      next(error);
+    });
+}
+
 module.exports = {
   getAllTopics,
   getArticleById,
@@ -92,4 +105,5 @@ module.exports = {
   postCommentByArticleId,
   patchArticleById,
   updateArticleById,
+  deleteCommentById,
 };

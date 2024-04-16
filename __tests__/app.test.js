@@ -293,6 +293,32 @@ describe("/api/articles", () => {
   });
 });
 
+describe("api/comments", () => {
+  describe("DELETE /api/comments/:comment_id", () => {
+    test("DELETE 204: Deletes the specified comment and sends no body back", () => {
+      return request(app).delete("/api/comments/2").expect(204);
+    });
+
+    test("DELETE 404: Responds with an appropriate status and error message when given a non-existent id", () => {
+      return request(app)
+        .delete("/api/comments/99999")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("Comment not found.");
+        });
+    });
+
+    test("DELETE 400: Responds with an appropiate status and error message when given an invalid id", () => {
+      return request(app)
+        .delete("/api/comments/invalid-id")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request.");
+        });
+    });
+  });
+});
+
 describe("Undeclared endpoints", () => {
   test("ALL 404: Responds with an error when the endpoint has not been found", () => {
     return request(app)
