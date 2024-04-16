@@ -210,7 +210,7 @@ describe("/api/articles", () => {
         });
     });
 
-    test("GET 400: Responds with an error when passed an id of an invalid data type", () => {
+    test("POST 400: Responds with an error when passed an id of an invalid data type", () => {
       return request(app)
         .post("/api/articles/invalid-id/comments")
         .send({ username: "butter_bridge", body: "I love napping in the sun!" })
@@ -220,7 +220,7 @@ describe("/api/articles", () => {
         });
     });
 
-    test("GET 404: Responds with an error when passed a non-existent id", () => {
+    test("POST 404: Responds with an error when passed a non-existent id", () => {
       return request(app)
         .post("/api/articles/99999/comments")
         .send({ username: "butter_bridge", body: "I love napping in the sun!" })
@@ -275,6 +275,16 @@ describe("/api/articles", () => {
       return request(app)
         .patch("/api/articles/5")
         .send({ inc_votes: "invalid-data" })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request.");
+        });
+    });
+
+    test("PATCH 400: Responds with an adequate status and error message when provided with an incomplete body", () => {
+      return request(app)
+        .patch("/api/articles/5")
+        .send({})
         .expect(400)
         .then(({ body }) => {
           expect(body.message).toBe("Bad request.");
