@@ -200,7 +200,7 @@ describe("/api/articles", () => {
         });
     });
 
-    test("POST 400: Responds with an adequate status and error message when the data type of the object's property values are not correct", () => {
+    test("POST 400: Responds with an adequate status and error message when the data type of the body's property values are not correct", () => {
       return request(app)
         .post("/api/articles/2/comments")
         .send({ username: 200, body: false })
@@ -227,6 +227,57 @@ describe("/api/articles", () => {
         .expect(404)
         .then(({ body }) => {
           expect(body.message).toBe("Article not found.");
+        });
+    });
+  });
+
+  describe("PATCH /api/articles/:article_id", () => {
+    test("PATCH 200: Responds with the updated article object", () => {
+      return request(app)
+        .patch("/api/articles/5")
+        .send({ inc_votes: 20 })
+        .expect(200)
+        .then(({ body }) => {
+          const { article } = body;
+
+          expect(article.article_id).toBe(5);
+          expect(article.votes).toBe(20);
+
+          expect(typeof article.title).toBe("string");
+          expect(typeof article.topic).toBe("string");
+          expect(typeof article.author).toBe("string");
+          expect(typeof article.body).toBe("string");
+          expect(typeof article.created_at).toBe("string");
+          expect(typeof article.article_img_url).toBe("string");
+        });
+    });
+
+    test("PATCH 404: Responds with an adequate status and message when provided with a valid but non-existent ID", () => {
+      return request(app)
+        .patch("/api/articles/99999")
+        .send({ inc_votes: 20 })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("Article not found.");
+        });
+    });
+
+    test("PATCH 400: Responds with an adequate status and message when provided with an invalid id", () => {
+      return request(app)
+        .patch("/api/articles/invalid-id")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request.");
+        });
+    });
+
+    test("PATCH 400: Responds with an adequate status and error message when the data type of the input's property values are not correct", () => {
+      return request(app)
+        .patch("/api/articles/5")
+        .send({ inc_votes: "invalid-data" })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request.");
         });
     });
   });
