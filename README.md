@@ -33,4 +33,6 @@ To do so please:
 
 ## /api/treasures/:treasure_id/comments
 
-- _GET_: Responds with an array with all comment objects of a particular article with the required key-value pairs(comment_id, votes, created_at, author, body, article_id) ordered from most recent.
+- _GET_: Responds with an array with all comment objects of a particular article with the required key-value pairs (comment_id, votes, created_at, author, body, article_id) ordered from most recent.
+
+- _POST_: Responds with the posted comment object associated with the passed id and containing the required key-value pairs (comment_id, votes, created_at, author, body, article_id).
