@@ -5,6 +5,7 @@ const {
   fetchCommentsByArticleId,
   checkIfArticleExists,
   addCommentByArticleId,
+  updateArticleById,
 } = require("../models/nc_news.models");
 
 function getAllTopics(req, res, next) {
@@ -70,10 +71,25 @@ function postCommentByArticleId(req, res, next) {
     });
 }
 
+function patchArticleById(req, res, next) {
+  const { article_id } = req.params;
+  const postedVotesUpdate = req.body;
+
+  updateArticleById(article_id, postedVotesUpdate)
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch((error) => {
+      next(error);
+    });
+}
+
 module.exports = {
   getAllTopics,
   getArticleById,
   getAllArticles,
   getCommentsByArticleId,
   postCommentByArticleId,
+  patchArticleById,
+  updateArticleById,
 };
