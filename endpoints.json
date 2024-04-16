@@ -56,5 +56,19 @@
         "created_at": "2020-11-03 09:12:00"
       }
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "responds with the posted comment object associated with the passed id and containing the required key-value pairs",
+    "params": ["article_id"],
+    "exampleResponse": {
+      "comment": {
+        "article_id": 3,
+        "comment_id": 4,
+        "votes": 0,
+        "author": "butter_bridge",
+        "body": "Fruit pastilles",
+        "created_at": "2020-11-03 09:12:00"
+      }
+    }
   }
 }
