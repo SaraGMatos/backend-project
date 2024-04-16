@@ -3,6 +3,8 @@ const {
   fetchArticleById,
   fetchAllArticles,
   fetchCommentsByArticleId,
+  checkIfArticleExists,
+  addCommentByArticleId,
 } = require("../models/nc_news.models");
 
 function getAllTopics(req, res, next) {
@@ -16,9 +18,13 @@ function getAllTopics(req, res, next) {
 }
 
 function getAllArticles(req, res, next) {
-  fetchAllArticles().then((articles) => {
-    res.status(200).send({ articles });
-  });
+  fetchAllArticles()
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch((error) => {
+      next(error);
+    });
 }
 
 function getArticleById(req, res, next) {
@@ -34,12 +40,33 @@ function getArticleById(req, res, next) {
 
 function getCommentsByArticleId(req, res, next) {
   const { article_id } = req.params;
-  fetchCommentsByArticleId(article_id)
-    .then((comments) => {
+  Promise.all([
+    fetchCommentsByArticleId(article_id),
+    checkIfArticleExists(article_id),
+  ])
+    .then(([comments]) => {
       res.status(200).send({ comments });
     })
     .catch((err) => {
       next(err);
+    });
+}
+
+function postCommentByArticleId(req, res, next) {
+  const { article_id } = req.params;
+  const postedCommentInfo = req.body;
+
+  Promise.all([
+    checkIfArticleExists(article_id),
+    addCommentByArticleId(article_id, postedCommentInfo),
+  ])
+    .then((comment) => {
+      const commentToPost = comment[1];
+
+      res.status(201).send({ comment: commentToPost });
+    })
+    .catch((error) => {
+      next(error);
     });
 }
 
@@ -48,4 +75,5 @@ module.exports = {
   getArticleById,
   getAllArticles,
   getCommentsByArticleId,
+  postCommentByArticleId,
 };
