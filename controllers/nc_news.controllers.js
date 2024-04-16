@@ -7,6 +7,7 @@ const {
   addCommentByArticleId,
   updateArticleById,
   removeCommentById,
+  fetchAllUsers,
 } = require("../models/nc_news.models");
 
 function getAllTopics(req, res, next) {
@@ -97,6 +98,12 @@ function deleteCommentById(req, res, next) {
     });
 }
 
+function getAllUsers(req, res, next) {
+  fetchAllUsers().then((users) => {
+    res.status(200).send({ users });
+  });
+}
+
 module.exports = {
   getAllTopics,
   getArticleById,
@@ -106,4 +113,5 @@ module.exports = {
   patchArticleById,
   updateArticleById,
   deleteCommentById,
+  getAllUsers,
 };
