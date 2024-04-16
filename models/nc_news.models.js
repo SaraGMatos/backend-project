@@ -1,12 +1,12 @@
 const db = require("../db/connection");
 
-function fetchAllTopics() {
+exports.fetchAllTopics = () => {
   return db.query(`SELECT * FROM topics;`).then(({ rows }) => {
     return rows;
   });
-}
+};
 
-function fetchAllArticles() {
+exports.fetchAllArticles = () => {
   return db
     .query(
       `SELECT articles.title, articles.article_id, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url,
@@ -18,9 +18,9 @@ function fetchAllArticles() {
     .then(({ rows }) => {
       return rows;
     });
-}
+};
 
-function fetchArticleById(article_id) {
+exports.fetchArticleById = (article_id) => {
   return db
     .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
     .then(({ rows }) => {
@@ -29,9 +29,9 @@ function fetchArticleById(article_id) {
       }
       return rows[0];
     });
-}
+};
 
-function fetchCommentsByArticleId(article_id) {
+exports.fetchCommentsByArticleId = (article_id) => {
   return db
     .query(
       `SELECT * FROM comments 
@@ -42,9 +42,9 @@ function fetchCommentsByArticleId(article_id) {
     .then(({ rows }) => {
       return rows;
     });
-}
+};
 
-function checkIfArticleExists(article_id) {
+exports.checkIfArticleExists = (article_id) => {
   return db
     .query(
       `SELECT * FROM articles 
@@ -56,9 +56,9 @@ function checkIfArticleExists(article_id) {
         return Promise.reject({ status: 404, message: "Article not found." });
       }
     });
-}
+};
 
-function addCommentByArticleId(article_id, { username, body }) {
+exports.addCommentByArticleId = (article_id, { username, body }) => {
   const author = username;
   const votes = 0;
 
@@ -72,9 +72,9 @@ function addCommentByArticleId(article_id, { username, body }) {
     .then(({ rows }) => {
       return rows[0];
     });
-}
+};
 
-function updateArticleById(article_id, { inc_votes }) {
+exports.updateArticleById = (article_id, { inc_votes }) => {
   return db
     .query(
       `UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;`,
@@ -89,9 +89,9 @@ function updateArticleById(article_id, { inc_votes }) {
       }
       return rows[0];
     });
-}
+};
 
-function removeCommentById(comment_id) {
+exports.removeCommentById = (comment_id) => {
   return db
     .query(`SELECT * FROM comments WHERE comment_id = $1`, [comment_id])
     .then(({ rows }) => {
@@ -102,22 +102,10 @@ function removeCommentById(comment_id) {
         comment_id,
       ]);
     });
-}
+};
 
-function fetchAllUsers() {
+exports.fetchAllUsers = () => {
   return db.query(`SELECT * FROM users;`).then(({ rows }) => {
     return rows;
   });
-}
-
-module.exports = {
-  fetchAllTopics,
-  fetchArticleById,
-  fetchAllArticles,
-  fetchCommentsByArticleId,
-  checkIfArticleExists,
-  addCommentByArticleId,
-  updateArticleById,
-  removeCommentById,
-  fetchAllUsers,
 };

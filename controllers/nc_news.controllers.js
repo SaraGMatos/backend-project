@@ -10,7 +10,7 @@ const {
   fetchAllUsers,
 } = require("../models/nc_news.models");
 
-function getAllTopics(req, res, next) {
+exports.getAllTopics = (req, res, next) => {
   fetchAllTopics()
     .then((topics) => {
       res.status(200).send({ topics });
@@ -18,9 +18,9 @@ function getAllTopics(req, res, next) {
     .catch((error) => {
       next(error);
     });
-}
+};
 
-function getAllArticles(req, res, next) {
+exports.getAllArticles = (req, res, next) => {
   fetchAllArticles()
     .then((articles) => {
       res.status(200).send({ articles });
@@ -28,9 +28,9 @@ function getAllArticles(req, res, next) {
     .catch((error) => {
       next(error);
     });
-}
+};
 
-function getArticleById(req, res, next) {
+exports.getArticleById = (req, res, next) => {
   const { article_id } = req.params;
   fetchArticleById(article_id)
     .then((article) => {
@@ -39,9 +39,9 @@ function getArticleById(req, res, next) {
     .catch((error) => {
       next(error);
     });
-}
+};
 
-function getCommentsByArticleId(req, res, next) {
+exports.getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   Promise.all([
     fetchCommentsByArticleId(article_id),
@@ -53,9 +53,9 @@ function getCommentsByArticleId(req, res, next) {
     .catch((err) => {
       next(err);
     });
-}
+};
 
-function postCommentByArticleId(req, res, next) {
+exports.postCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   const postedCommentInfo = req.body;
 
@@ -66,9 +66,9 @@ function postCommentByArticleId(req, res, next) {
     .catch((error) => {
       next(error);
     });
-}
+};
 
-function patchArticleById(req, res, next) {
+exports.patchArticleById = (req, res, next) => {
   const { article_id } = req.params;
   const postedVotesUpdate = req.body;
 
@@ -79,9 +79,9 @@ function patchArticleById(req, res, next) {
     .catch((error) => {
       next(error);
     });
-}
+};
 
-function deleteCommentById(req, res, next) {
+exports.deleteCommentById = (req, res, next) => {
   const { comment_id } = req.params;
 
   removeCommentById(comment_id)
@@ -91,22 +91,10 @@ function deleteCommentById(req, res, next) {
     .catch((error) => {
       next(error);
     });
-}
+};
 
-function getAllUsers(req, res, next) {
+exports.getAllUsers = (req, res, next) => {
   fetchAllUsers().then((users) => {
     res.status(200).send({ users });
   });
-}
-
-module.exports = {
-  getAllTopics,
-  getArticleById,
-  getAllArticles,
-  getCommentsByArticleId,
-  postCommentByArticleId,
-  patchArticleById,
-  updateArticleById,
-  deleteCommentById,
-  getAllUsers,
 };
