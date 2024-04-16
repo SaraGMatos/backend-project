@@ -31,6 +31,8 @@ To do so please:
 
 - _GET_: Responds with an article object with the required keys (author, title, article_id, body, topic, created_at, votes, article_imd_url).
 
+- _PATCH_: Responds with the required article object and its updated votes property, along with the other required keys (author, title, article_id, topic, created_at, article_img_url).
+
 ## /api/treasures/:treasure_id/comments
 
 - _GET_: Responds with an array with all comment objects of a particular article with the required key-value pairs (comment_id, votes, created_at, author, body, article_id) ordered from most recent.
