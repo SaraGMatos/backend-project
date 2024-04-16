@@ -90,5 +90,18 @@
     "description": "deletes the specified comment and sends no body back",
     "params": "NA",
     "exampleResponse": 204
+  },
+  "GET /api/users": {
+    "description": "responds with an array of all users",
+    "params": "NA",
+    "exampleResponse": {
+      "topics": [
+        {
+          "username": "mochaccina",
+          "name": "mocha",
+          "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+        }
+      ]
+    }
   }
 }
