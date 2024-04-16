@@ -319,6 +319,26 @@ describe("api/comments", () => {
   });
 });
 
+describe("api/users", () => {
+  describe("GET /api/users", () => {
+    test("Responds with an array with all user objects", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body }) => {
+          const { users } = body;
+
+          expect(users.length).toBe(4);
+          users.forEach((user) => {
+            expect(typeof user.username).toBe("string");
+            expect(typeof user.name).toBe("string");
+            expect(typeof user.avatar_url).toBe("string");
+          });
+        });
+    });
+  });
+});
+
 describe("Undeclared endpoints", () => {
   test("ALL 404: Responds with an error when the endpoint has not been found", () => {
     return request(app)
