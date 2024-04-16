@@ -7,6 +7,7 @@ const {
   postCommentByArticleId,
   patchArticleById,
   deleteCommentById,
+  getAllUsers,
 } = require("./controllers/nc_news.controllers");
 const {
   sendUndeclaredEndpointError,
@@ -37,6 +38,8 @@ app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 app.patch("/api/articles/:article_id", patchArticleById);
 
 app.delete("/api/comments/:comment_id", deleteCommentById);
+
+app.get("/api/users", getAllUsers);
 
 app.all("*", sendUndeclaredEndpointError);
 
