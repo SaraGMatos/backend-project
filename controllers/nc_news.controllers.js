@@ -59,14 +59,9 @@ function postCommentByArticleId(req, res, next) {
   const { article_id } = req.params;
   const postedCommentInfo = req.body;
 
-  Promise.all([
-    checkIfArticleExists(article_id),
-    addCommentByArticleId(article_id, postedCommentInfo),
-  ])
+  addCommentByArticleId(article_id, postedCommentInfo)
     .then((comment) => {
-      const commentToPost = comment[1];
-
-      res.status(201).send({ comment: commentToPost });
+      res.status(201).send({ comment });
     })
     .catch((error) => {
       next(error);

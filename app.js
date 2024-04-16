@@ -13,7 +13,8 @@ const {
   sendUndeclaredEndpointError,
   sendCustomError,
   sendServerError,
-  sendSqlError,
+  sendBadRequestPsqlError,
+  sendInexistentValuePsqlError,
 } = require("./error_handlers/nc_news.error_handlers");
 const endpoints = require("./endpoints.json");
 
@@ -45,7 +46,9 @@ app.all("*", sendUndeclaredEndpointError);
 
 app.use(sendCustomError);
 
-app.use(sendSqlError);
+app.use(sendBadRequestPsqlError);
+
+app.use(sendInexistentValuePsqlError);
 
 app.use(sendServerError);
 

@@ -178,6 +178,7 @@ describe("/api/articles", () => {
         .expect(201)
         .then(({ body }) => {
           const { comment } = body;
+
           expect(comment).toMatchObject({
             comment_id: 19,
             body: "I love napping in the sun!",
@@ -206,7 +207,17 @@ describe("/api/articles", () => {
         .send({ username: 200, body: false })
         .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe("Bad request.");
+          expect(body.message).toBe("Wrong value data type/Not found");
+        });
+    });
+
+    test("POST 400: Responds with an adequate status and error message when the username does not exist", () => {
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send({ username: "Mocha", body: "I love naps in the sun" })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Wrong value data type/Not found");
         });
     });
 
@@ -220,13 +231,13 @@ describe("/api/articles", () => {
         });
     });
 
-    test("POST 404: Responds with an error when passed a non-existent id", () => {
+    test("POST 400: Responds with an error when passed a non-existent id", () => {
       return request(app)
         .post("/api/articles/99999/comments")
         .send({ username: "butter_bridge", body: "I love napping in the sun!" })
-        .expect(404)
+        .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe("Article not found.");
+          expect(body.message).toBe("Wrong value data type/Not found");
         });
     });
   });
@@ -265,6 +276,7 @@ describe("/api/articles", () => {
     test("PATCH 400: Responds with an adequate status and message when provided with an invalid id", () => {
       return request(app)
         .patch("/api/articles/invalid-id")
+        .send({ inc_votes: 20 })
         .expect(400)
         .then(({ body }) => {
           expect(body.message).toBe("Bad request.");
