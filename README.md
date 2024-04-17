@@ -20,7 +20,7 @@ Please follow the steps below to run this project locally:
 
 6. Add these two files to _.gitignore_.
 
-\*Please note that you will need to set another _\_.env_ file if you wish to host this project online.
+\*Please note that you will need to set another _\.env_ file if you wish to host this project online.
 
 After you have taken the previous steps, you are ready to **create and seed your databases**:
 
