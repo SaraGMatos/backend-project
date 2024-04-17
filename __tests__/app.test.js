@@ -210,7 +210,7 @@ describe("/api/articles", () => {
   });
 
   describe("POST /api/articles/:article_id/comments", () => {
-    test("Responds with the posted comment", () => {
+    test("POST 200: Responds with the posted comment", () => {
       return request(app)
         .post("/api/articles/3/comments")
         .send({
@@ -246,20 +246,20 @@ describe("/api/articles", () => {
     test("POST 400: Responds with an adequate status and error message when the data type of the body's property values are not correct", () => {
       return request(app)
         .post("/api/articles/2/comments")
-        .send({ username: 200, body: false })
+        .send({ username: 90, body: "This is not false" })
         .expect(400)
         .then(({ body }) => {
           expect(body.message).toBe("Bad request.");
         });
     });
 
-    test("POST 400: Responds with an adequate status and error message when the username does not exist", () => {
+    test("POST 404: Responds with an adequate status and error message when the username does not exist", () => {
       return request(app)
         .post("/api/articles/2/comments")
         .send({ username: "Mocha", body: "I love naps in the sun" })
-        .expect(400)
+        .expect(404)
         .then(({ body }) => {
-          expect(body.message).toBe("Bad request.");
+          expect(body.message).toBe("Not found");
         });
     });
 
