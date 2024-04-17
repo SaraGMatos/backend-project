@@ -48,8 +48,6 @@ app.use(sendCustomError);
 
 app.use(sendBadRequestPsqlError);
 
-app.use(sendInexistentValuePsqlError);
-
 app.use(sendServerError);
 
 module.exports = app;

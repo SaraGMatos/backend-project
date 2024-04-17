@@ -8,6 +8,7 @@ const {
   updateArticleById,
   removeCommentById,
   fetchAllUsers,
+  checkIfTopicExists,
 } = require("../models/nc_news.models");
 
 exports.getAllTopics = (req, res, next) => {
@@ -21,8 +22,14 @@ exports.getAllTopics = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  fetchAllArticles()
+  const { topic } = req.query;
+  const queryKeys = Object.keys(req.query);
+
+  fetchAllArticles(topic, queryKeys)
     .then((articles) => {
+      if (articles.length === 0) {
+        return checkIfTopicExists(topic);
+      }
       res.status(200).send({ articles });
     })
     .catch((error) => {
