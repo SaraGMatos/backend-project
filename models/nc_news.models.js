@@ -80,6 +80,7 @@ exports.addCommentByArticleId = (article_id, { username, body }) => {
       formattedComment
     )
     .then(({ rows }) => {
+      console.log(rows);
       return rows[0];
     });
 };
@@ -139,6 +140,21 @@ exports.checkIfTopicExists = (topic) => {
     .query(`SELECT * FROM topics WHERE slug = $1`, [topic])
     .then(({ rows: topic }) => {
       if (topic.length === 0) {
+        return Promise.reject({ status: 404, message: "Not found" });
+      }
+      return [];
+    });
+};
+
+exports.checkUserAndBody = (username, body) => {
+  if (typeof username === "number" || !body || !username) {
+    return Promise.reject({ status: 400, message: "Bad request." });
+  }
+
+  return db
+    .query(`SELECT * FROM users WHERE username = $1`, [username])
+    .then(({ rows: username }) => {
+      if (username.length === 0) {
         return Promise.reject({ status: 404, message: "Not found" });
       }
       return [];

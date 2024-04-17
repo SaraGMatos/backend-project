@@ -9,6 +9,7 @@ const {
   removeCommentById,
   fetchAllUsers,
   checkIfTopicExists,
+  checkUserAndBody,
 } = require("../models/nc_news.models");
 
 exports.getAllTopics = (req, res, next) => {
@@ -64,9 +65,12 @@ exports.getCommentsByArticleId = (req, res, next) => {
 
 exports.postCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
-  const postedCommentInfo = req.body;
+  const { username, body } = req.body;
 
-  addCommentByArticleId(article_id, postedCommentInfo)
+  checkUserAndBody(username, body)
+    .then(() => {
+      return addCommentByArticleId(article_id, { username, body });
+    })
     .then((comment) => {
       res.status(201).send({ comment });
     })
