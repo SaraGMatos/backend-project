@@ -34,7 +34,7 @@ To do so please:
 
 ## /api/articles/:article_id
 
-- _GET_: Responds with an article object with the required keys (author, title, article_id, body, topic, created_at, votes, article_imd_url).
+- _GET_: Responds with an article object with the required keys (author, title, article_id, body, topic, created_at, votes, article_imd_url, comment_count).
 
 - _PATCH_: Responds with the required article object and its updated votes property, along with the other required keys (author, title, article_id, topic, created_at, article_img_url).
 
