@@ -125,6 +125,17 @@ describe("/api/articles", () => {
         });
     });
 
+    test("GET 200: Responds with an article object containing an added comment_count property", () => {
+      return request(app)
+        .get("/api/articles/3")
+        .expect(200)
+        .then(({ body }) => {
+          const { article } = body;
+
+          expect(article.comment_count).toBe(2);
+        });
+    });
+
     test("GET 404: Responds with an error when passed a non-existent id", () => {
       return request(app)
         .get("/api/articles/99999")
