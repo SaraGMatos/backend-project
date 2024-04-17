@@ -14,9 +14,9 @@ Please follow the steps below to run this project locally:
 
 3. Once you are in the project folder, install node package manager (npm) to set up needed dependencies. Paste this on your terminal: `npm install`.
 
-4. Create your test environment variable. Add an _.env.development_ file to the project root and, inside, set the development environment variable: PGDATABASE=nc_news.
+4. Create your test environment variable. Add an _.env.development_ file to the project root and, inside, set the development environment variable: `PGDATABASE=nc_news`.
 
-5. Create your development environment variable.Add an _.env.test_ file to the project root and, inside, set the test environment variable: PGDATABASE=nc_news_test.
+5. Create your development environment variable.Add an _.env.test_ file to the project root and, inside, set the test environment variable: `PGDATABASE=nc_news_test`.
 
 6. Add these two files to _.gitignore_.
 
