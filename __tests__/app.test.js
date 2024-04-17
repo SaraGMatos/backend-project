@@ -73,6 +73,37 @@ describe("/api/articles", () => {
           });
         });
     });
+
+    test("GET 200: Accepts a topic query and responds with an array of articles of that topic", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles.length).toBe(12);
+
+          body.articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+          });
+        });
+    });
+
+    test("GET 404: Responds with an adequate error when the topic does not exist", () => {
+      return request(app)
+        .get("/api/articles?topic=mocha")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("Not found");
+        });
+    });
+
+    test("GET 404: Responds with an adequate error when the column name does not exist", () => {
+      return request(app)
+        .get("/api/articles?inexistent=mitch")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("Not found");
+        });
+    });
   });
 
   describe("GET /api/articles/:article_id", () => {
@@ -153,7 +184,7 @@ describe("/api/articles", () => {
         .get("/api/articles/99999/comments")
         .expect(404)
         .then(({ body }) => {
-          expect(body.message).toBe("Article not found.");
+          expect(body.message).toBe("Not found.");
         });
     });
 
@@ -207,7 +238,7 @@ describe("/api/articles", () => {
         .send({ username: 200, body: false })
         .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe("Wrong value data type/Not found");
+          expect(body.message).toBe("Bad request.");
         });
     });
 
@@ -217,7 +248,7 @@ describe("/api/articles", () => {
         .send({ username: "Mocha", body: "I love naps in the sun" })
         .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe("Wrong value data type/Not found");
+          expect(body.message).toBe("Bad request.");
         });
     });
 
@@ -237,7 +268,7 @@ describe("/api/articles", () => {
         .send({ username: "butter_bridge", body: "I love napping in the sun!" })
         .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe("Wrong value data type/Not found");
+          expect(body.message).toBe("Bad request.");
         });
     });
   });

@@ -30,6 +30,7 @@ To do so please:
 ## /api/articles
 
 - _GET_: Responds with an array of objects with all articles in descending order by creation date and with the required keys (author, title, article_id, topic, created_at, votes, article_img_url, comment_count) ordered from most recent.
+  - Also accepts a query of topic that responds with an array with article objects associated to that topic.
 
 ## /api/articles/:article_id
 
