@@ -42,6 +42,8 @@ app.delete("/api/comments/:comment_id", deleteCommentById);
 
 app.get("/api/users", getAllUsers);
 
+//! Error handling middleware.
+
 app.all("*", sendUndeclaredEndpointError);
 
 app.use(sendCustomError);
