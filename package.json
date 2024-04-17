@@ -2,8 +2,10 @@
   "name": "be-nc-news",
   "version": "1.0.0",
   "description": "bc-nc-news",
-  "main": "index.js",
+  "main": "listen.js",
   "scripts": {
+    "seed-prod": "NODE_ENV=production npm run seed",
+    "start": "node listen.js",
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "node ./db/seeds/run-seed.js",
     "test": "jest ./__tests__/app.test.js",
