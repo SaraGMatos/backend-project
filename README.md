@@ -59,7 +59,9 @@ After you have taken the previous steps, you are ready to **create and seed your
 ### /api/articles
 
 - _GET_: Responds with an array of all article objects with the required keys (author, title, article_id, topic, created_at, votes, article_img_url, comment_count) ordered from most recent.
-  - Also accepts a query of topic (_?topic=topic_name_) that responds with an array of article objects associated to that topic.
+  - Accepts a query of **topic** (_?topic=topic_name_) that responds with an array of article objects associated to that topic.
+  - Accepts a query of **order** (\_?order=asc_desc) that responds with an array of article objects ordered by desc or asc order, defaulting to desc.
+  - Accepts a query of **sort_by** (\_?sort_by=column_name) that responds with an array of article objects sorted by any column, defaulting to created_at.
 
 ### /api/articles/:article_id
 

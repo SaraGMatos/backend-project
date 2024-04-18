@@ -6,18 +6,41 @@ exports.fetchAllTopics = () => {
   });
 };
 
-exports.fetchAllArticles = (topic, queryKeys) => {
-  const validQueryKeys = ["topic"];
+exports.fetchAllArticles = (
+  sort_by = "created_at",
+  topic,
+  order = "desc",
+  queryKey
+) => {
+  const validQueryKeys = ["sort_by", "topic", "order"];
+  const validOrderBys = ["asc", "desc"];
+  const validSortBys = [
+    "title",
+    "topic",
+    "author",
+    "body",
+    "created_at",
+    "votes",
+    "article_image_url",
+    "comment_count",
+  ];
   const queryValue = [];
 
-  if (queryKeys.length !== 0) {
+  if (!validOrderBys.includes(order)) {
+    return Promise.reject({ status: 404, message: "Not found." });
+  }
+
+  if (!validSortBys.includes(sort_by)) {
+    return Promise.reject({ status: 404, message: "Not found." });
+  }
+
+  if (queryKey.length !== 0) {
     for (let i = 0; i < validQueryKeys.length; i++) {
-      if (!validQueryKeys.includes(queryKeys[i])) {
-        return Promise.reject({ status: 404, message: "Not found" });
+      if (!validQueryKeys.includes(queryKey[0])) {
+        return Promise.reject({ status: 400, message: "Column invalid." });
       }
     }
   }
-
   let sqlString = `SELECT articles.title, articles.article_id, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url,
   COUNT(comments.comment_id) AS comment_count
   FROM articles
@@ -29,7 +52,20 @@ exports.fetchAllArticles = (topic, queryKeys) => {
     queryValue.push(topic);
   }
 
-  sqlString += `GROUP BY articles.article_id ORDER BY articles.created_at DESC;`;
+  sqlString += `GROUP BY articles.article_id `;
+
+  if (sort_by) {
+    sqlString += `ORDER BY articles.${sort_by} `;
+  } else {
+    sqlString += `ORDER BY articles.created_at `;
+  }
+
+  if (order) {
+    sqlString += `${order};`;
+  } else {
+    sqlString += `DESC;`;
+  }
+
   return db.query(sqlString, queryValue).then(({ rows }) => {
     return rows;
   });
@@ -80,7 +116,6 @@ exports.addCommentByArticleId = (article_id, { username, body }) => {
       formattedComment
     )
     .then(({ rows }) => {
-      console.log(rows);
       return rows[0];
     });
 };

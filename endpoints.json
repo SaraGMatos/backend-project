@@ -11,7 +11,7 @@
   },
   "GET /api/articles": {
     "description": "responds with an array of all article objects with the required key-value pairs in descending order by creation date",
-    "queries": ["topic"],
+    "queries": ["topic", "order", "sort_by"],
     "exampleResponse": {
       "articles": [
         {
