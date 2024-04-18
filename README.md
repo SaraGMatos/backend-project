@@ -2,45 +2,47 @@
 
 ## What is it?
 
-Northcoders News is a RESTful API that allows users to interact and access data from our News site database.
+This is a RESTful API that allows users to interact with Northcoders News, a webapp similar to Reddit where users can read and post articles as well as comment and vote them.
+
+This API has been developed using Node.js, Postgres and Express.
+
+Pssst! The Render hosted version for this project is here: *https://nc-news-app-jnwm.onrender.com/api*
 
 ## Installation
 
+1. Before you go any further, check that you have at least the following versions:
+
+   - For _Node.js_: v21.6.1
+
+   - For _Postgres_: v16.2
+
 Please follow the steps below to run this project locally:
 
-1. If you do not have _node.js_ installed on your machine, please follow the node.js installation guide: *https://nodejs.org/en/learn/getting-started/how-to-install-nodejs*.
+2. If you do not have _node.js_ installed on your machine, please follow the node.js installation guide: *https://nodejs.org/en/learn/getting-started/how-to-install-nodejs*.
 
-2. Clone this repository by pasting the following on your terminal: `git clone https://github.com/SaraGMatos/backend-project`.
+3. Clone this repository by pasting the following on your terminal: `git clone https://github.com/SaraGMatos/backend-project`.
 
-3. Once you are in the project folder, install node package manager (npm) to set up needed dependencies. Paste this on your terminal: `npm install`.
+4. Once you are in the project folder, install node package manager (npm) to set up needed dependencies. Paste this on your terminal: `npm install`.
 
-4. Create your test environment variable. Add an _.env.development_ file to the project root and, inside, set the development environment variable: `PGDATABASE=nc_news`.
+5. Create your test environment variable. Add an `env.development` file to the project root and, inside, set the development environment variable: `PGDATABASE=nc_news`.
 
-5. Create your development environment variable.Add an _.env.test_ file to the project root and, inside, set the test environment variable: `PGDATABASE=nc_news_test`.
+6. Create your development environment variable.Add an `.env.test` file to the project root and, inside, set the test environment variable: `PGDATABASE=nc_news_test`.
 
-6. Add these two files to _.gitignore_.
+7. Add these two files to `.gitignore`.
 
-\*Please note that you will need to set another _\.env_ file if you wish to host this project online.
+   \*Please note that you will need to set another `.env` file if you wish to host this project online.
 
-After you have taken the previous steps, you are ready to **create and seed your databases**:
+8. Create your databases locally running `npm run setup-dbs` on your terminal.
 
-1. Create your databases locally running `npm run setup-dbs` on your terminal.
+9. The test databases will be re-seeded with every test run, using the command `npm test`. Note we are using Jest as our testing framework.
 
-2. The test databases will be seeded with every test run, using the command `npm test`.
+10. To seed the development database, please run `npm run seed`.
 
-3. To seed the development database, please run `npm run seed`.
+11. Finally, to start the server, use `npm run start`. It will run on port 9090 by deafult.
 
-### Minimum Node.js / Postgres versions needed:
-
-- For _Node.js_: v21.6.1
-
-- For _Postgres_: v16.2
-
-## Files & Links
+## Files
 
 - The _endpoints.json_ file contains a detailed list of all available endpoints on the Northcoders News API, in the form of a JSON object.
-
-- You can access a Render hosted version of this project on: *https://nc-news-app-jnwm.onrender.com/api*
 
 ## Endpoints
 
@@ -82,3 +84,11 @@ After you have taken the previous steps, you are ready to **create and seed your
 ### /api/comments/:comment_id
 
 - _DELETE_: Deletes the specified comment and sends a 204 and no body back.
+
+## Contributions
+
+This project is open to contributions. Feel free to submit a pull request if you would like to make a suggestion or raise an issue or problem with the code.
+
+## Final note
+
+This project was developed
