@@ -23,12 +23,12 @@ exports.getAllTopics = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  const { topic } = req.query;
-  const queryKeys = Object.keys(req.query);
+  const { sort_by, topic, order } = req.query;
+  const queryKey = Object.keys(req.query);
 
-  fetchAllArticles(topic, queryKeys)
+  fetchAllArticles(sort_by, topic, order, queryKey)
     .then((articles) => {
-      if (articles.length === 0) {
+      if (topic && articles.length === 0) {
         return checkIfTopicExists(topic);
       }
       res.status(200).send({ articles });

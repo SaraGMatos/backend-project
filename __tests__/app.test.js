@@ -87,6 +87,46 @@ describe("/api/articles", () => {
         });
     });
 
+    test("GET 200: Accepts a sort-by query which sorts the articles by any valid column, defaulting to created_at", () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("votes", {
+            descending: true,
+          });
+        });
+    });
+
+    test("GET 200: Accepts an order query which orders the articles by created_at, defaulting to desc", () => {
+      return request(app)
+        .get("/api/articles?order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("created_at", {
+            descending: false,
+          });
+        });
+    });
+
+    test("GET 404: Responds with an error when the sort_by query does not exist", () => {
+      return request(app)
+        .get("/api/articles?sort_by=wrong_query")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("Not found.");
+        });
+    });
+
+    test("GET 404: Responds with an error when the order query does not exist", () => {
+      return request(app)
+        .get("/api/articles?order=wrong_query")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("Not found.");
+        });
+    });
+
     test("GET 404: Responds with an adequate error when the topic does not exist", () => {
       return request(app)
         .get("/api/articles?topic=mocha")
@@ -96,12 +136,12 @@ describe("/api/articles", () => {
         });
     });
 
-    test("GET 404: Responds with an adequate error when the column name does not exist", () => {
+    test("GET 400: Responds with an adequate error when the column name passed does not exist", () => {
       return request(app)
-        .get("/api/articles?inexistent=mitch")
-        .expect(404)
+        .get("/api/articles?inexistent=author")
+        .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe("Not found");
+          expect(body.message).toBe("Column invalid.");
         });
     });
   });
