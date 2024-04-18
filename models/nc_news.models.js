@@ -107,17 +107,19 @@ exports.fetchCommentsByArticleId = (article_id) => {
 exports.addCommentByArticleId = (article_id, { username, body }) => {
   const author = username;
   const votes = 0;
-
   const formattedComment = [body, article_id, author, votes];
-  return db
-    .query(
-      `INSERT INTO comments (body, article_id, author, votes)
+
+  return this.checkUserAndBody(username, body).then(() => {
+    return db
+      .query(
+        `INSERT INTO comments (body, article_id, author, votes)
     VALUES ($1, $2, $3, $4) RETURNING *`,
-      formattedComment
-    )
-    .then(({ rows }) => {
-      return rows[0];
-    });
+        formattedComment
+      )
+      .then(({ rows }) => {
+        return rows[0];
+      });
+  });
 };
 
 exports.updateArticleById = (article_id, { inc_votes }) => {
@@ -156,6 +158,16 @@ exports.fetchAllUsers = () => {
   });
 };
 
+exports.fetchUserByUsername = (username) => {
+  return this.checkIfUsernameExists(username)
+    .then(() => {
+      return db.query(`SELECT * FROM users WHERE username = $1`, [username]);
+    })
+    .then(({ rows: user }) => {
+      return user[0];
+    });
+};
+
 exports.checkIfArticleExists = (article_id) => {
   return db
     .query(
@@ -175,6 +187,17 @@ exports.checkIfTopicExists = (topic) => {
     .query(`SELECT * FROM topics WHERE slug = $1`, [topic])
     .then(({ rows: topic }) => {
       if (topic.length === 0) {
+        return Promise.reject({ status: 404, message: "Not found" });
+      }
+      return [];
+    });
+};
+
+exports.checkIfUsernameExists = (username) => {
+  return db
+    .query(`SELECT * FROM users WHERE username = $1`, [username])
+    .then(({ rows: username }) => {
+      if (username.length === 0) {
         return Promise.reject({ status: 404, message: "Not found" });
       }
       return [];
