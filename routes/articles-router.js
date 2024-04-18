@@ -5,7 +5,7 @@ const {
   getCommentsByArticleId,
   postCommentByArticleId,
   patchArticleById,
-} = require("../controllers/nc_news.controllers");
+} = require("../controllers/articles.controllers");
 
 articlesRouter.get("/", getAllArticles);
 

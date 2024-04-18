@@ -1,5 +1,5 @@
 const commentsRouter = require("express").Router();
-const { deleteCommentById } = require("../controllers/nc_news.controllers");
+const { deleteCommentById } = require("../controllers/comments.controllers");
 
 commentsRouter.delete("/:comment_id", deleteCommentById);
 

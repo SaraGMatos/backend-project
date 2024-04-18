@@ -4,7 +4,7 @@ const topicsRouter = require("./topics-router");
 const articlesRouter = require("./articles-router");
 const commentsRouter = require("./comments-router");
 const usersRouter = require("./users-router");
-const { getEndpoints } = require("../controllers/nc_news.controllers");
+const { getEndpoints } = require("../controllers/endpoints_file.controller");
 
 apiRouter.use(express.json());
 
