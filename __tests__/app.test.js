@@ -415,7 +415,7 @@ describe("api/comments", () => {
 
 describe("api/users", () => {
   describe("GET /api/users", () => {
-    test("Responds with an array with all user objects", () => {
+    test("GET 200: Responds with an array with all user objects", () => {
       return request(app)
         .get("/api/users")
         .expect(200)
@@ -430,6 +430,28 @@ describe("api/users", () => {
           });
         });
     });
+  });
+
+  describe("GET /api/users/:username", () => {
+    test("GET 200: Responds with a user object with the required keys", () => {
+      return request(app)
+        .get("/api/users/butter_bridge")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.user.username).toBe("butter_bridge");
+          expect(typeof body.user.avatar_url).toBe("string");
+          expect(typeof body.user.name).toBe("string");
+        });
+    });
+  });
+
+  test("GET 404: Responds with adequate error and message when username does not exist", () => {
+    return request(app)
+      .get("/api/users/101")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toBe("Not found");
+      });
   });
 });
 

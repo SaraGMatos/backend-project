@@ -10,6 +10,7 @@ const {
   fetchAllUsers,
   checkIfTopicExists,
   checkUserAndBody,
+  fetchUserByUsername,
 } = require("../models/nc_news.models");
 const endpoints = require("../endpoints.json");
 
@@ -72,10 +73,7 @@ exports.postCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   const { username, body } = req.body;
 
-  checkUserAndBody(username, body)
-    .then(() => {
-      return addCommentByArticleId(article_id, { username, body });
-    })
+  addCommentByArticleId(article_id, { username, body })
     .then((comment) => {
       res.status(201).send({ comment });
     })
@@ -110,7 +108,23 @@ exports.deleteCommentById = (req, res, next) => {
 };
 
 exports.getAllUsers = (req, res, next) => {
-  fetchAllUsers().then((users) => {
-    res.status(200).send({ users });
-  });
+  fetchAllUsers()
+    .then((users) => {
+      res.status(200).send({ users });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+exports.getUserByUsername = (req, res, next) => {
+  const { username } = req.params;
+
+  fetchUserByUsername(username)
+    .then((user) => {
+      res.status(200).send({ user });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };
