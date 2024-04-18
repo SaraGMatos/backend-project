@@ -52,6 +52,10 @@ After you have taken the previous steps, you are ready to **create and seed your
 
 - _GET_: Responds with an array of all user objects and the required keys (username, name, avatar_url).
 
+### /api/users/:username
+
+- _GET_: Responds with the specified user object and its required keys (username, name, avatar_url).
+
 ### /api/topics
 
 - _GET_: Responds with an array of all topic objects and the required keys (slug, description).
