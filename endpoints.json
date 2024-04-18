@@ -96,10 +96,23 @@
     "description": "responds with an array of all users",
     "params": "NA",
     "exampleResponse": {
-      "topics": [
+      "users": [
         {
           "username": "mochaccina",
           "name": "mocha",
+          "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+        }
+      ]
+    }
+  },
+  "GET /api/users/:username": {
+    "description": "responds with a user object",
+    "params": ["username"],
+    "exampleResponse": {
+      "user": [
+        {
+          "username": "lyla",
+          "name": "joanne",
           "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
         }
       ]
