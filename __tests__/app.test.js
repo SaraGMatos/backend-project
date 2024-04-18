@@ -109,21 +109,21 @@ describe("/api/articles", () => {
         });
     });
 
-    test("GET 404: Responds with an error when the sort_by query does not exist", () => {
+    test("GET 400: Responds with an error when the sort_by query does not exist", () => {
       return request(app)
         .get("/api/articles?sort_by=wrong_query")
-        .expect(404)
+        .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe("Not found.");
+          expect(body.message).toBe("Bad request.");
         });
     });
 
-    test("GET 404: Responds with an error when the order query does not exist", () => {
+    test("GET 400: Responds with an error when the order query does not exist", () => {
       return request(app)
         .get("/api/articles?order=wrong_query")
-        .expect(404)
+        .expect(400)
         .then(({ body }) => {
-          expect(body.message).toBe("Not found.");
+          expect(body.message).toBe("Bad request.");
         });
     });
 

@@ -3,8 +3,8 @@ const {
   sendUndeclaredEndpointError,
   sendCustomError,
   sendServerError,
-  sendBadRequestPsqlError,
-} = require("./error_handlers/nc_news.error_handlers");
+  sendPsqlError,
+} = require("./error_handlers/error_handlers");
 const apiRouter = require("./routes/api-router");
 
 const app = express();
@@ -17,7 +17,7 @@ app.all("*", sendUndeclaredEndpointError);
 
 app.use(sendCustomError);
 
-app.use(sendBadRequestPsqlError);
+app.use(sendPsqlError);
 
 app.use(sendServerError);
 

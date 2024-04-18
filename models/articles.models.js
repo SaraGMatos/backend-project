@@ -1,11 +1,14 @@
 const db = require("../db/connection");
-const { checkUserAndBody } = require("../util_functions/utils");
+const {
+  checkUserAndBody,
+  checkIfTopicExists,
+} = require("../util_functions/utils");
 
 exports.fetchAllArticles = (
   sort_by = "created_at",
   topic,
   order = "desc",
-  queryKey
+  queryKeys
 ) => {
   const validQueryKeys = ["sort_by", "topic", "order"];
   const validOrderBys = ["asc", "desc"];
@@ -22,20 +25,21 @@ exports.fetchAllArticles = (
   const queryValue = [];
 
   if (!validOrderBys.includes(order)) {
-    return Promise.reject({ status: 404, message: "Not found." });
+    return Promise.reject({ status: 400, message: "Bad request." });
   }
 
   if (!validSortBys.includes(sort_by)) {
-    return Promise.reject({ status: 404, message: "Not found." });
+    return Promise.reject({ status: 400, message: "Bad request." });
   }
 
-  if (queryKey.length !== 0) {
-    for (let i = 0; i < validQueryKeys.length; i++) {
-      if (!validQueryKeys.includes(queryKey[0])) {
+  if (queryKeys.length !== 0) {
+    for (let i = 0; i < queryKeys.length; i++) {
+      if (!validQueryKeys.includes(queryKeys[i])) {
         return Promise.reject({ status: 400, message: "Column invalid." });
       }
     }
   }
+
   let sqlString = `SELECT articles.title, articles.article_id, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url,
     COUNT(comments.comment_id) AS comment_count
     FROM articles

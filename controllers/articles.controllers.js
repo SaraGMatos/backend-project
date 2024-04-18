@@ -12,9 +12,9 @@ const {
 
 exports.getAllArticles = (req, res, next) => {
   const { sort_by, topic, order } = req.query;
-  const queryKey = Object.keys(req.query);
+  const queryKeys = Object.keys(req.query);
 
-  fetchAllArticles(sort_by, topic, order, queryKey)
+  fetchAllArticles(sort_by, topic, order, queryKeys)
     .then((articles) => {
       if (topic && articles.length === 0) {
         return checkIfTopicExists(topic);
