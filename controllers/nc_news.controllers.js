@@ -11,6 +11,11 @@ const {
   checkIfTopicExists,
   checkUserAndBody,
 } = require("../models/nc_news.models");
+const endpoints = require("../endpoints.json");
+
+exports.getEndpoints = (req, res, next) => {
+  res.status(200).send({ endpoints });
+};
 
 exports.getAllTopics = (req, res, next) => {
   fetchAllTopics()
