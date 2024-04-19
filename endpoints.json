@@ -27,6 +27,23 @@
       ]
     }
   },
+  "POST /api/articles": {
+    "description": "responds with the posted article object with the required key-value pairs",
+    "params": "NA",
+    "exampleResponse": {
+      "article": {
+        "article_id": 3,
+        "author": "butter_bridge",
+        "title": "How to make a tomato soup with mitch",
+        "body": "Call mitch. Throw some tomatoes in a pan and cook them for a bit.",
+        "topic": "mitch",
+        "votes": 0,
+        "comment_count": 0,
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        "created_at": "2020-11-03 09:12:00"
+      }
+    }
+  },
   "GET /api/articles/:article_id": {
     "description": "responds with the required article object",
     "params": ["article_id"],
