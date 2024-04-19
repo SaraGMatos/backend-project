@@ -85,6 +85,8 @@ Please follow the steps below to run this project locally:
 
 - _DELETE_: Deletes the specified comment and sends a 204 and no body back.
 
+- _PATCH_: Responds with the patched article object and its updated votes property, along with the other required keys (author, title, article_id, topic, created_at, article_img_url).
+
 ## Contributions
 
 This project is open to contributions. Feel free to submit a pull request if you would like to make a suggestion or raise an issue or problem with the code.
