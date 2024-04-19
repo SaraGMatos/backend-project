@@ -43,6 +43,44 @@ describe("/api/topics", () => {
           });
         });
     });
+
+    test("POST 201: Responds with the posted topic object and the required keys", () => {
+      return request(app)
+        .post("/api/topics")
+        .send({
+          slug: "mocha",
+          description: "why not?",
+        })
+        .expect(201)
+        .then(({ body }) => {
+          const { topic } = body;
+
+          expect(topic).toMatchObject({
+            slug: "mocha",
+            description: "why not?",
+          });
+        });
+    });
+
+    test("POST 400: Responds with an adequate status and error message when provided with an incomplete body", () => {
+      return request(app)
+        .post("/api/topics")
+        .send({ slug: "mocha" })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request.");
+        });
+    });
+
+    test("POST 400: Responds with an adequate status and error message when the data type of the body's property values are not correct", () => {
+      return request(app)
+        .post("/api/topics")
+        .send({ slug: 90, description: "This is not false" })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request.");
+        });
+    });
   });
 });
 
@@ -150,7 +188,7 @@ describe("/api/articles", () => {
         .expect(200)
         .then(({ body }) => {
           const { articles, total_count } = body.articles;
-          console.log(articles);
+
           expect(articles.length).toBe(5);
           expect(articles[0]).toHaveProperty("article_id", 6);
           expect(total_count).toBe(13);
@@ -163,7 +201,7 @@ describe("/api/articles", () => {
         .expect(200)
         .then(({ body }) => {
           const { articles, total_count } = body.articles;
-          console.log(articles);
+
           expect(articles.length).toBe(1);
           expect(articles[0]).toHaveProperty("article_id", 13);
           expect(total_count).toBe(13);
@@ -396,6 +434,30 @@ describe("/api/articles", () => {
     });
   });
 
+  describe("DELETE /api/articles/:article_id", () => {
+    test("DELETE 204: Deletes the specified article and sends no body back", () => {
+      return request(app).delete("/api/articles/2").expect(204);
+    });
+
+    test("DELETE 404: Responds with an appropriate status and error message when given a non-existent id", () => {
+      return request(app)
+        .delete("/api/articles/99999")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("Article not found.");
+        });
+    });
+
+    test("DELETE 400: Responds with an appropiate status and error message when given an invalid id", () => {
+      return request(app)
+        .delete("/api/articles/invalid-id")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request.");
+        });
+    });
+  });
+
   describe("GET /api/articles/:article_id/comments", () => {
     test("GET 200: Responds with an array with all comment objects of a particular article with the required key-value pairs ordered from most recent", () => {
       return request(app)
@@ -430,6 +492,70 @@ describe("/api/articles", () => {
           expect(comments.length).toBe(0);
         });
     });
+
+    test("GET 200: Accepts a limit query which limits the number of rows returned", () => {
+      return request(app)
+        .get("/api/articles/1/comments?limit=5")
+        .expect(200)
+        .then(({ body }) => {
+          const { comments } = body;
+
+          expect(comments.length).toBe(5);
+        });
+    });
+
+    test("GET 200: Limit defaults to 10 when not passed", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({ body }) => {
+          const { comments } = body;
+
+          expect(comments.length).toBe(10);
+        });
+    });
+
+    test("GET 200: Accepts a second p query that specifies the page at which the response starts", () => {
+      return request(app)
+        .get("/api/articles/1/comments?limit=5&p=2")
+        .expect(200)
+        .then(({ body }) => {
+          const { comments } = body;
+          expect(comments.length).toBe(5);
+          expect(comments[0]).toHaveProperty("comment_id", 8);
+        });
+    });
+
+    test("GET 200: The p query works for different pages", () => {
+      return request(app)
+        .get("/api/articles/1/comments?limit=3&p=4")
+        .expect(200)
+        .then(({ body }) => {
+          const { comments } = body;
+          expect(comments.length).toBe(2);
+          expect(comments[0]).toHaveProperty("comment_id", 4);
+        });
+    });
+
+    test("GET 400: Responds with an adequate error when the page value is invalid", () => {
+      return request(app)
+        .get("/api/articles/1/comments?p=invalid")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request.");
+        });
+    });
+
+    test("GET 400: Responds with an adequate error when the column name passed does not exist", () => {
+      return request(app)
+        .get("/api/articles/1/comments?invalid=5")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Column invalid.");
+        });
+    });
+
+    //! -------------------- NEW TESTS END
 
     test("GET 404: Responds with an error when passed a non-existent id", () => {
       return request(app)

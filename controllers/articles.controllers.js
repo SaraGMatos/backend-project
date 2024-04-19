@@ -5,6 +5,7 @@ const {
   fetchCommentsByArticleId,
   addCommentByArticleId,
   addArticle,
+  removeArticleById,
 } = require("../models/articles.models");
 const {
   checkIfTopicExists,
@@ -15,7 +16,7 @@ exports.getAllArticles = (req, res, next) => {
   const { sort_by, topic, order, limit, p } = req.query;
 
   const queryKeys = Object.keys(req.query);
-  console.log(queryKeys);
+
   fetchAllArticles(sort_by, topic, order, limit, p, queryKeys)
     .then((articles) => {
       if (topic && articles.articles.length === 0) {
@@ -64,13 +65,30 @@ exports.patchArticleById = (req, res, next) => {
     });
 };
 
+exports.deleteArticleById = (req, res, next) => {
+  const { article_id } = req.params;
+
+  removeArticleById(article_id)
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
 exports.getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
+  const { limit, p } = req.query;
+  const queryKeys = Object.keys(req.query);
+
   Promise.all([
-    fetchCommentsByArticleId(article_id),
+    fetchCommentsByArticleId(article_id, limit, p, queryKeys),
     checkIfArticleExists(article_id),
   ])
-    .then(([comments]) => {
+    .then((promises) => {
+      const comments = promises[0];
+
       res.status(200).send({ comments });
     })
     .catch((err) => {
@@ -82,7 +100,7 @@ exports.postCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   const { username, body } = req.body;
 
-  addCommentByArticleId(article_id, { username, body })
+  addCommentByArticleId(article_id, username, body)
     .then((comment) => {
       res.status(201).send({ comment });
     })

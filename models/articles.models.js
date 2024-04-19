@@ -2,6 +2,7 @@ const db = require("../db/connection");
 const {
   checkUserAndBody,
   checkIfTopicExists,
+  checkIfArticleExists,
 } = require("../util_functions/utils");
 
 exports.fetchAllArticles = (
@@ -116,7 +117,6 @@ exports.addArticle = ({ author, title, body, topic, article_img_url }) => {
         formattedArticle
       )
       .then(({ rows: article }) => {
-        console.log(article);
         article[0].comment_count = 0;
         return article[0];
       });
@@ -160,20 +160,50 @@ exports.updateArticleById = (article_id, { inc_votes }) => {
     });
 };
 
-exports.fetchCommentsByArticleId = (article_id) => {
+exports.removeArticleById = (article_id) => {
   return db
-    .query(
-      `SELECT * FROM comments 
-        WHERE article_id = $1 
-        ORDER BY created_at DESC;`,
-      [article_id]
-    )
+    .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
     .then(({ rows }) => {
-      return rows;
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, message: "Article not found." });
+      }
+      return db.query(`DELETE FROM articles WHERE article_id = $1`, [
+        article_id,
+      ]);
     });
 };
 
-exports.addCommentByArticleId = (article_id, { username, body }) => {
+exports.fetchCommentsByArticleId = (article_id, limit = 10, p, queryKeys) => {
+  const validQueryKeys = ["limit", "p"];
+
+  if (queryKeys.length !== 0) {
+    for (let i = 0; i < queryKeys.length; i++) {
+      if (!validQueryKeys.includes(queryKeys[i])) {
+        return Promise.reject({ status: 400, message: "Column invalid." });
+      }
+    }
+  }
+
+  let sqlString = `SELECT * FROM comments 
+  WHERE article_id = $1 
+  ORDER BY created_at DESC `;
+
+  if (limit) {
+    sqlString += `LIMIT ${limit} `;
+  } else {
+    sqlString += `LIMIT 10 `;
+  }
+
+  if (p) {
+    sqlString += `OFFSET ((${limit} * ${p}) - ${limit})`;
+  }
+
+  return db.query(sqlString, [article_id]).then(({ rows }) => {
+    return rows;
+  });
+};
+
+exports.addCommentByArticleId = (article_id, username, body) => {
   const author = username;
   const votes = 0;
   const formattedComment = [body, article_id, author, votes];

@@ -11,6 +11,7 @@ exports.checkIfArticleExists = (article_id) => {
       if (articles.length === 0) {
         return Promise.reject({ status: 404, message: "Not found." });
       }
+      return [];
     });
 };
 
