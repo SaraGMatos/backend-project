@@ -62,13 +62,17 @@ Please follow the steps below to run this project locally:
 
 - _GET_: Responds with an array of all topic objects and the required keys (slug, description).
 
+- _POST_: Responds with the posted topic object containing the required keys (slug, description).
+
 ### /api/articles
 
 - _GET_: Responds with an array of all article objects with the required keys (author, title, article_id, topic, created_at, votes, article_img_url, comment_count) ordered from most recent.
 
-  - Accepts a query of **topic** (_?topic=topic_name_) that responds with an array of article objects associated to that topic.
+  - Accepts a query of **topic** (\_?topic=topic_name) that responds with an array of article objects associated to that topic.
   - Accepts a query of **order** (\_?order=asc_desc) that responds with an array of article objects ordered by desc or asc order, defaulting to desc.
   - Accepts a query of **sort_by** (\_?sort_by=column_name) that responds with an array of article objects sorted by any column, defaulting to created_at.
+  - Accepts a query of **limit** (\_?limit=) that limits the number of responses, defaulting to 10.
+  - Accepts a query of **p** (\_?p=) that specifies the number page at which to navigate.
 
 - _POST_: Responds with the posted article object with the required keys (article_id, author, title, body, topic, article_img_url, votes, created_at, comment_count)
 
@@ -78,9 +82,14 @@ Please follow the steps below to run this project locally:
 
 - _PATCH_: Responds with the patched article object and its updated votes property, along with the other required keys (author, title, article_id, topic, created_at, article_img_url).
 
+- _DELETE_: Deletes the specified article and sends a 204 and no body back.
+
 ### /api/articles/:article_id/comments
 
 - _GET_: Responds with an array of all comment objects associated to the passed article id with the required keys (comment_id, votes, created_at, author, body, article_id) ordered from most recent.
+
+  - Accepts a query of **limit** (\_?limit=) that limits the number of responses, defaulting to 10.
+  - Accepts a query of **p** (\_?p=) that specifies the number page at which to navigate.
 
 - _POST_: Responds with the posted comment object associated to the passed article id and containing the required key-value pairs (comment_id, votes, created_at, author, body, article_id).
 
@@ -96,4 +105,4 @@ This project is open to contributions. Feel free to submit a pull request if you
 
 ## Final note
 
-This project was developed
+This project was developed as a week-long backend review during the Software Delopment bootcamp at Northcoders.

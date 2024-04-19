@@ -9,9 +9,19 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+  "POST /api/topics": {
+    "description": "responds with the posted topic object containing the required key-value pairs",
+    "params": "NA",
+    "exampleResponse": {
+      "topic": {
+        "slug": "cooking",
+        "description": "tasty recipes!"
+      }
+    }
+  },
   "GET /api/articles": {
     "description": "responds with an array of all article objects with the required key-value pairs in descending order by creation date",
-    "queries": ["topic", "order", "sort_by"],
+    "queries": ["topic", "order", "sort_by", "limit", "p"],
     "exampleResponse": {
       "articles": [
         {
@@ -24,7 +34,8 @@
           "votes": 0,
           "comment_count": "6"
         }
-      ]
+      ],
+      "total_count": 13
     }
   },
   "POST /api/articles": {
@@ -61,9 +72,30 @@
       }
     }
   },
+  "PATCH /api/articles/:article_id": {
+    "description": "responds with the required article object and its updated votes property",
+    "params": ["article_id"],
+    "exampleResponse": {
+      "article": {
+        "article_id": 3,
+        "topic": "cooking",
+        "votes": 20,
+        "author": "butter_bridge",
+        "body": "Fruit pastilles",
+        "created_at": "2020-11-03 09:12:00",
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+      }
+    }
+  },
+  "DELETE /api/articles/:article_id": {
+    "description": "deletes the specified article and sends no body back",
+    "params": "NA",
+    "exampleResponse": 204
+  },
   "GET /api/articles/:article_id/comments": {
     "description": "responds with an array with all comment objects of a particular article with the required key-value pairs ordered from most recent",
     "params": ["article_id"],
+    "queries": ["limit", "p"],
     "exampleResponse": {
       "article": {
         "article_id": 3,
@@ -86,21 +118,6 @@
         "author": "butter_bridge",
         "body": "Fruit pastilles",
         "created_at": "2020-11-03 09:12:00"
-      }
-    }
-  },
-  "PATCH /api/articles/:article_id": {
-    "description": "responds with the required article object and its updated votes property",
-    "params": ["article_id"],
-    "exampleResponse": {
-      "article": {
-        "article_id": 3,
-        "topic": "cooking",
-        "votes": 20,
-        "author": "butter_bridge",
-        "body": "Fruit pastilles",
-        "created_at": "2020-11-03 09:12:00",
-        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
       }
     }
   },
