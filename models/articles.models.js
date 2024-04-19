@@ -70,6 +70,24 @@ exports.fetchAllArticles = (
   });
 };
 
+exports.addArticle = ({ author, title, body, topic, article_img_url }) => {
+  const formattedArticle = [title, topic, author, body, article_img_url];
+
+  return checkUserAndBody(author, body).then(() => {
+    return db
+      .query(
+        `INSERT INTO articles (title, topic, author, body, article_img_url)
+      VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+        formattedArticle
+      )
+      .then(({ rows: article }) => {
+        console.log(article);
+        article[0].comment_count = 0;
+        return article[0];
+      });
+  });
+};
+
 exports.fetchArticleById = (article_id) => {
   return db
     .query(

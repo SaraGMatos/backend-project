@@ -4,6 +4,7 @@ const {
   updateArticleById,
   fetchCommentsByArticleId,
   addCommentByArticleId,
+  addArticle,
 } = require("../models/articles.models");
 const {
   checkIfTopicExists,
@@ -20,6 +21,18 @@ exports.getAllArticles = (req, res, next) => {
         return checkIfTopicExists(topic);
       }
       res.status(200).send({ articles });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+exports.postArticle = (req, res, next) => {
+  const { author, title, body, topic, article_img_url } = req.body;
+
+  addArticle({ author, title, body, topic, article_img_url })
+    .then((article) => {
+      res.status(201).send({ article });
     })
     .catch((error) => {
       next(error);
