@@ -411,6 +411,56 @@ describe("api/comments", () => {
         });
     });
   });
+
+  describe("PATCH /api/comments/:comment_id", () => {
+    test("PATCH 200: Responds with the updated comment object", () => {
+      return request(app)
+        .patch("/api/comments/3")
+        .send({ inc_votes: 20 })
+        .expect(200)
+        .then(({ body }) => {
+          const { comment } = body;
+
+          expect(comment.comment_id).toBe(3);
+          expect(comment.votes).toBe(120);
+
+          expect(typeof comment.article_id).toBe("number");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.body).toBe("string");
+          expect(typeof comment.created_at).toBe("string");
+        });
+    });
+
+    test("PATCH 404: Responds with an adequate status and message when provided with a valid but non-existent ID", () => {
+      return request(app)
+        .patch("/api/comments/99999")
+        .send({ inc_votes: 20 })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("Comment not found.");
+        });
+    });
+
+    test("PATCH 400: Responds with an adequate status and error message when the data type of the input's property values are not correct", () => {
+      return request(app)
+        .patch("/api/comments/5")
+        .send({ inc_votes: "invalid-data" })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request.");
+        });
+    });
+
+    test("PATCH 400: Responds with an adequate status and error message when provided with an incomplete body", () => {
+      return request(app)
+        .patch("/api/comments/5")
+        .send({})
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request.");
+        });
+    });
+  });
 });
 
 describe("api/users", () => {

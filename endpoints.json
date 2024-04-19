@@ -76,9 +76,9 @@
     "description": "responds with the required article object and its updated votes property",
     "params": ["article_id"],
     "exampleResponse": {
-      "comment": {
+      "article": {
         "article_id": 3,
-        "comment_id": 4,
+        "topic": "cooking",
         "votes": 20,
         "author": "butter_bridge",
         "body": "Fruit pastilles",
@@ -91,6 +91,20 @@
     "description": "deletes the specified comment and sends no body back",
     "params": "NA",
     "exampleResponse": 204
+  },
+  "PATCH /api/comments/:comment_id": {
+    "description": "responds with the required comment object and its updated votes property",
+    "params": ["comment_id"],
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 4,
+        "article_id": 3,
+        "votes": 20,
+        "author": "butter_bridge",
+        "body": "Fruit pastilles",
+        "created_at": "2020-11-03 09:12:00"
+      }
+    }
   },
   "GET /api/users": {
     "description": "responds with an array of all users",
