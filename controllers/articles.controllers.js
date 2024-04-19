@@ -12,12 +12,13 @@ const {
 } = require("../util_functions/utils");
 
 exports.getAllArticles = (req, res, next) => {
-  const { sort_by, topic, order } = req.query;
-  const queryKeys = Object.keys(req.query);
+  const { sort_by, topic, order, limit, p } = req.query;
 
-  fetchAllArticles(sort_by, topic, order, queryKeys)
+  const queryKeys = Object.keys(req.query);
+  console.log(queryKeys);
+  fetchAllArticles(sort_by, topic, order, limit, p, queryKeys)
     .then((articles) => {
-      if (topic && articles.length === 0) {
+      if (topic && articles.articles.length === 0) {
         return checkIfTopicExists(topic);
       }
       res.status(200).send({ articles });

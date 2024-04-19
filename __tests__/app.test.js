@@ -53,9 +53,8 @@ describe("/api/articles", () => {
         .get("/api/articles")
         .expect(200)
         .then(({ body }) => {
-          const { articles } = body;
-
-          expect(articles.length).toBe(13);
+          const { articles, total_count } = body.articles;
+          expect(total_count).toBe(13);
 
           articles.forEach((article) => {
             expect(typeof article.author).toBe("string");
@@ -79,9 +78,10 @@ describe("/api/articles", () => {
         .get("/api/articles?topic=mitch")
         .expect(200)
         .then(({ body }) => {
-          expect(body.articles.length).toBe(12);
+          const { articles, total_count } = body.articles;
+          expect(total_count).toBe(12);
 
-          body.articles.forEach((article) => {
+          articles.forEach((article) => {
             expect(article.topic).toBe("mitch");
           });
         });
@@ -92,7 +92,8 @@ describe("/api/articles", () => {
         .get("/api/articles?sort_by=votes")
         .expect(200)
         .then(({ body }) => {
-          expect(body.articles).toBeSortedBy("votes", {
+          const { articles } = body.articles;
+          expect(articles).toBeSortedBy("votes", {
             descending: true,
           });
         });
@@ -103,9 +104,87 @@ describe("/api/articles", () => {
         .get("/api/articles?order=asc")
         .expect(200)
         .then(({ body }) => {
-          expect(body.articles).toBeSortedBy("created_at", {
+          const { articles } = body.articles;
+          expect(articles).toBeSortedBy("created_at", {
             descending: false,
           });
+        });
+    });
+
+    test("GET 200: Accepts a limit query which limits the number of rows returned", () => {
+      return request(app)
+        .get("/api/articles?limit=9")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles, total_count } = body.articles;
+          expect(articles.length).toBe(9);
+          expect(total_count).toBe(13);
+        });
+    });
+
+    test("GET 200: Limit defaults to 10 when not passed", () => {
+      return request(app)
+        .get("/api/articles?")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles, total_count } = body.articles;
+          expect(articles.length).toBe(10);
+          expect(total_count).toBe(13);
+        });
+    });
+
+    test("GET 200: Response should have an added total_count property displaying the total numbers of articles with any filters applied, except limit", () => {
+      return request(app)
+        .get("/api/articles?limit=5")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles, total_count } = body.articles;
+          expect(articles.length).toBe(5);
+          expect(total_count).toBe(13);
+        });
+    });
+
+    test("GET 200: Accepts a second p query that specifies the page at which the response starts", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id&order=asc&limit=5&p=2")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles, total_count } = body.articles;
+          console.log(articles);
+          expect(articles.length).toBe(5);
+          expect(articles[0]).toHaveProperty("article_id", 6);
+          expect(total_count).toBe(13);
+        });
+    });
+
+    test("GET 200: The p query works for different pages", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id&order=asc&limit=3&p=5")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles, total_count } = body.articles;
+          console.log(articles);
+          expect(articles.length).toBe(1);
+          expect(articles[0]).toHaveProperty("article_id", 13);
+          expect(total_count).toBe(13);
+        });
+    });
+
+    test("GET 404: Responds with an adequate error when the page does not exist", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id&order=asc&limit=3&p=6")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("Not found");
+        });
+    });
+
+    test("GET 400: Responds with an adequate error when the page value is invalid", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id&order=asc&limit=3&p=hello")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Bad request.");
         });
     });
 
