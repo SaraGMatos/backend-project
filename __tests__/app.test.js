@@ -47,7 +47,7 @@ describe("/api/topics", () => {
 });
 
 describe("/api/articles", () => {
-  describe.only("GET /api/articles", () => {
+  describe("GET /api/articles", () => {
     test("GET 200: Responds with an array of all article objects with the required properties in desc order by date", () => {
       return request(app)
         .get("/api/articles")
@@ -110,8 +110,6 @@ describe("/api/articles", () => {
           });
         });
     });
-
-    //! NEW TESTING FOR PAGINATION BELOW ----------------------------
 
     test("GET 200: Accepts a limit query which limits the number of rows returned", () => {
       return request(app)
@@ -189,8 +187,6 @@ describe("/api/articles", () => {
           expect(body.message).toBe("Bad request.");
         });
     });
-
-    //! NEW TESTING FINISHES HERE ----------------------------
 
     test("GET 400: Responds with an error when the sort_by query does not exist", () => {
       return request(app)
