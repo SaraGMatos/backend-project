@@ -65,9 +65,12 @@ Please follow the steps below to run this project locally:
 ### /api/articles
 
 - _GET_: Responds with an array of all article objects with the required keys (author, title, article_id, topic, created_at, votes, article_img_url, comment_count) ordered from most recent.
+
   - Accepts a query of **topic** (_?topic=topic_name_) that responds with an array of article objects associated to that topic.
   - Accepts a query of **order** (\_?order=asc_desc) that responds with an array of article objects ordered by desc or asc order, defaulting to desc.
   - Accepts a query of **sort_by** (\_?sort_by=column_name) that responds with an array of article objects sorted by any column, defaulting to created_at.
+
+- _POST_: Responds with the posted article object with the required keys (article_id, author, title, body, topic, article_img_url, votes, created_at, comment_count)
 
 ### /api/articles/:article_id
 
