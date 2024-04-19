@@ -8,9 +8,11 @@ exports.fetchAllArticles = (
   sort_by = "created_at",
   topic,
   order = "desc",
+  limit = "10",
+  p,
   queryKeys
 ) => {
-  const validQueryKeys = ["sort_by", "topic", "order"];
+  const validQueryKeys = ["sort_by", "topic", "order", "limit", "p"];
   const validOrderBys = ["asc", "desc"];
   const validSortBys = [
     "title",
@@ -20,6 +22,7 @@ exports.fetchAllArticles = (
     "created_at",
     "votes",
     "article_image_url",
+    "article_id",
     "comment_count",
   ];
   const queryValue = [];
@@ -48,6 +51,7 @@ exports.fetchAllArticles = (
 
   if (topic) {
     sqlString += `WHERE articles.topic = $1 `;
+
     queryValue.push(topic);
   }
 
@@ -60,14 +64,45 @@ exports.fetchAllArticles = (
   }
 
   if (order) {
-    sqlString += `${order};`;
+    sqlString += `${order} `;
   } else {
-    sqlString += `DESC;`;
+    sqlString += `DESC `;
   }
 
-  return db.query(sqlString, queryValue).then(({ rows }) => {
-    return rows;
-  });
+  if (limit) {
+    sqlString += `LIMIT ${limit} `;
+  } else {
+    sqlString += `LIMIT 10 `;
+  }
+  if (p) {
+    sqlString += `OFFSET ((${limit} * ${p}) - ${limit})`;
+  }
+
+  const splittedSqlString = sqlString.split(`LIMIT ${limit} `)[0];
+
+  return db
+    .query(sqlString, queryValue)
+    .then(({ rows: sqlString }) => {
+      const sqlStringNoLimit = db
+        .query(splittedSqlString, queryValue)
+        .then(({ rows }) => {
+          return rows;
+        });
+      return Promise.all([sqlString, sqlStringNoLimit]);
+    })
+    .then((response) => {
+      const articles = response[0];
+      const allArticles = response[1];
+
+      if (articles.length === 0) {
+        return Promise.reject({ status: 404, message: "Not found" });
+      }
+
+      return {
+        articles: articles,
+        total_count: allArticles.length,
+      };
+    });
 };
 
 exports.addArticle = ({ author, title, body, topic, article_img_url }) => {
