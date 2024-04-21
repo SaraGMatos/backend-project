@@ -50,7 +50,7 @@ jobs:
 
   deploy:
     name: deploy
-    needs: lint
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to Render
