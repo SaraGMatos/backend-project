@@ -8,7 +8,7 @@
     "start": "node listen.js",
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "node ./db/seeds/run-seed.js",
-    "test": "jest ./__tests__/app.test.js",
+    "test": "jest",
     "prepare": "husky install"
   },
   "repository": {
