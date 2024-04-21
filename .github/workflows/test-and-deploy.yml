@@ -29,25 +29,6 @@ jobs:
       - name: Run tests
         run: PGDATABASE=nc_news PGUSER=sara PGPASSWORD=test npm test
 
-  # lint:
-  #   name: lint
-  #   needs: test
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout Repo
-  #       uses: actions/checkout@v4
-
-  #     - name: Use Node.js
-  #       uses: actions/setup-node@v4
-
-  #     - name: Install dependencies
-  #       run: npm ci
-
-  #     - name: Run linters
-  #       uses: wearerequired/lint-action@v2
-  #       with:
-  #         prettier: true
-
   deploy:
     name: deploy
     needs: test
