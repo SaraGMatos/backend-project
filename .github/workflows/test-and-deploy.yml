@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    name: Test
+    name: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -29,31 +29,28 @@ jobs:
       - name: Run tests
         run: PGDATABASE=nc_news PGUSER=sara PGPASSWORD=test npm test
 
-  # lint:
-  #   needs: test
-  #   name: Lint
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout Repo
-  #       uses: actions/checkout@v3
+  lint:
+    name: lint
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
 
-  #     - name: Use Node.js
-  #       uses: actions/setup-node@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
 
-  #     - name: Use PostgreSQL
-  #       uses: harmon758/postgresql-action@v1
-  #       with:
-  #         postgresql db: "nc_news"
-  #         postgresql user: "sara"
+      - name: Install dependencies
+        run: npm ci
 
-  #     - name: Install dependencies
-  #       run: npm ci
-
-  #     - name: Run tests
-  #       run: PGDATABASE=nc_news PGUSER=sara npm test
+      - name: Run linters
+        uses: wearerequired/lint-action@v2
+        with:
+          prettier: true
 
   deploy:
-    needs: test
+    name: deploy
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to Render
