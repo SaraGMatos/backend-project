@@ -1,3 +1,4 @@
+const cors = require("cors");
 const express = require("express");
 const {
   sendUndeclaredEndpointError,
@@ -5,9 +6,12 @@ const {
   sendServerError,
   sendPsqlError,
 } = require("./error_handlers/error_handlers");
-const apiRouter = require("./routes/api-router");
 
 const app = express();
+
+const apiRouter = require("./routes/api-router");
+
+app.use(cors());
 
 app.use("/api", apiRouter);
 
