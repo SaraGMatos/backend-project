@@ -137,6 +137,19 @@ describe("/api/articles", () => {
         });
     });
 
+    test("GET 200: Accepts a sort-by query which sorts the articles by comment_count, defaulting to created_at", () => {
+      return request(app)
+        .get("/api/articles?sort_by=comment_count")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body.articles;
+          console.log(articles);
+          expect(articles).toBeSorted("comment_count", {
+            descending: true,
+          });
+        });
+    });
+
     test("GET 200: Accepts an order query which orders the articles by created_at, defaulting to desc", () => {
       return request(app)
         .get("/api/articles?order=asc")

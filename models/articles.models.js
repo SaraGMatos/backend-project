@@ -59,7 +59,7 @@ exports.fetchAllArticles = (
   sqlString += `GROUP BY articles.article_id `;
 
   if (sort_by) {
-    sqlString += `ORDER BY articles.${sort_by} `;
+    sqlString += `ORDER BY ${sort_by} `;
   } else {
     sqlString += `ORDER BY articles.created_at `;
   }
